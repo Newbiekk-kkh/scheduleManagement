@@ -61,4 +61,15 @@ public class ScheduleServiceImpl implements ScheduleService {
         return new ScheduleResponseDto(schedule);
     }
 
+    @Override
+    public void deleteSchedule(Long id) {
+        Schedule schedule = scheduleRepository.findScheduleById(id);
+
+        if (schedule == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Schedule not found");
+        }
+
+        scheduleRepository.deleteSchedule(id);
+    }
+
 }

@@ -12,7 +12,7 @@ API 명세서
 | 일정 삭제 | DELETE | /api/schedules/{schedules_id}  | 요청 param(id) | 삭제 정보 | 200 OK, 403 비밀번호 틀림, 404 선택한 일정이 사라짐 |
 
 1. 일정등록
-  - 요청(request) : POST /api/scedules
+  - 요청(request) : POST /api/schedules
   ```
 {
 	"userName":"고강혁",
@@ -51,7 +51,7 @@ API 명세서
 }
 ```
 3. 선택 일정 조회
-- 요청(request) : GET /api/scedules/{schedule_id}
+- 요청(request) : GET /api/schedules/{schedule_id}
 - 응답(response)
 ```
 {
@@ -64,7 +64,7 @@ API 명세서
 }
 ```
 4. 일정 수정
-- 요청(request) : PUT /api/scedules/{schedule_id}
+- 요청(request) : PUT /api/schedules/{schedule_id}
 ```
 {
     "userName" : "고강혁"
@@ -80,7 +80,7 @@ API 명세서
 }
 ```
 5. 일정 삭제
-- 요청(request) : DELETE /api/scedules/{schedule_id}
+- 요청(request) : DELETE /api/schedules/{schedule_id}
 ```
 {
     "password" : "123123"

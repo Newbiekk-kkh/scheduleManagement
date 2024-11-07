@@ -4,6 +4,9 @@ import com.example.schedulemanagement.dto.ScheduleRequestDto;
 import com.example.schedulemanagement.dto.ScheduleResponseDto;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 public interface ScheduleService {
     ScheduleResponseDto saveSchedule(ScheduleRequestDto dto);
+    List<ScheduleResponseDto> findAllSchedules();
 }

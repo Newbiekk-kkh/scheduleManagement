@@ -45,4 +45,20 @@ public class ScheduleServiceImpl implements ScheduleService {
         return new ScheduleResponseDto(schedule);
     }
 
+    @Override
+    public ScheduleResponseDto updateSchedule(Long id, String userName, String title, String contents) {
+        Schedule schedule = scheduleRepository.findScheduleById(id);
+
+        if (schedule == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Schedule not found");
+        }
+        if (userName == null || title == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username and title cannot be null");
+        }
+
+        schedule.update(userName, title, contents);
+
+        return new ScheduleResponseDto(schedule);
+    }
+
 }

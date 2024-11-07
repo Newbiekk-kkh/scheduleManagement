@@ -46,27 +46,35 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public ScheduleResponseDto updateSchedule(Long id, String userName, String title, String contents) {
+    public ScheduleResponseDto updateSchedule(Long id, ScheduleRequestDto dto) {
         Schedule schedule = scheduleRepository.findScheduleById(id);
 
         if (schedule == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Schedule not found");
         }
-        if (userName == null || title == null) {
+        if (dto.getUserName() == null || dto.getTitle() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username and title cannot be null");
         }
+        if (!schedule.getPassword().equals(dto.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Passwords don't match");
+        }
 
-        schedule.update(userName, title, contents);
+
+        schedule.update(dto.getUserName(), dto.getTitle(), dto.getContents());
 
         return new ScheduleResponseDto(schedule);
     }
 
     @Override
-    public void deleteSchedule(Long id) {
+    public void deleteSchedule(Long id, ScheduleRequestDto dto) {
         Schedule schedule = scheduleRepository.findScheduleById(id);
 
         if (schedule == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Schedule not found");
+        }
+
+        if (!schedule.getPassword().equals(dto.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Passwords don't match");
         }
 
         scheduleRepository.deleteSchedule(id);

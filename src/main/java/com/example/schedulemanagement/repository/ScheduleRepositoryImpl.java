@@ -31,4 +31,9 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
 
         return allSchedules;
     }
+
+    @Override
+    public Schedule findScheduleById(Long id) {
+        return scheduleList.get(id);
+    }
 }

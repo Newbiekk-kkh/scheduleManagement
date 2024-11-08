@@ -42,9 +42,9 @@ public class ScheduleController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ScheduleResponseDto> updateSchedule(@PathVariable Long id, @RequestBody ScheduleResponseDto dto) {
+    public ResponseEntity<ScheduleResponseDto> updateSchedule(@PathVariable Long id, @RequestBody ScheduleRequestDto dto) {
 
-        return new ResponseEntity<>(scheduleService.updateSchedule(id, dto.getUserName(), dto.getTitle(), dto.getContents()), HttpStatus.OK);
+        return new ResponseEntity<>(scheduleService.updateSchedule(id, dto), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

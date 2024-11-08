@@ -23,6 +23,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         this.scheduleRepository = scheduleRepository;
     }
 
+    // 일정 저장
     @Override
     public ScheduleResponseDto saveSchedule(ScheduleRequestDto dto) {
         Schedule schedule = new Schedule(dto.getUserName(), dto.getTitle(), dto.getContents(), dto.getPassword());
@@ -30,11 +31,13 @@ public class ScheduleServiceImpl implements ScheduleService {
         return scheduleRepository.saveSchedule(schedule);
     }
 
+    // 일정 조회(전체)
     @Override
     public List<ScheduleResponseDto> findAllSchedules() {
         return scheduleRepository.findAllSchedules();
     }
 
+    // 일정 조회(단건)
     @Override
     public ScheduleResponseDto findScheduleById(Long id) {
 
@@ -43,6 +46,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         return new ScheduleResponseDto(schedule);
     }
 
+    // 일정 수정
     @Transactional
     @Override
     public ScheduleResponseDto updateSchedule(Long id, ScheduleRequestDto dto) {
@@ -51,6 +55,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
         Schedule schedule = scheduleRepository.findScheduleByIdOrElseThrow(id);
 
+        // 비밀번호 틀릴시 403 FORBIDDEN
         if (!schedule.getPassword().equals(dto.getPassword())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Passwords don't match");
         }
@@ -60,14 +65,17 @@ public class ScheduleServiceImpl implements ScheduleService {
         if (updatedRow == 0) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Schedule not found");
         }
+        // 새 데이터로 수정된 객체 재생성
         Schedule updatedSchedule = scheduleRepository.findScheduleByIdOrElseThrow(id);
 
         return new ScheduleResponseDto(updatedSchedule);
     }
 
+    // 일정 삭제
     @Override
     public void deleteSchedule(Long id, @RequestBody ScheduleRequestDto dto) {
         Schedule schedule = scheduleRepository.findScheduleByIdOrElseThrow(id);
+        // 비밀번호 틀릴시 403 FORBIDDEN
         if (!schedule.getPassword().equals(dto.getPassword())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Passwords don't match");
         }

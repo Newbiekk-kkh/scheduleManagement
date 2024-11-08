@@ -25,7 +25,7 @@ public class Schedule {
         this.password = password;
     }
 
-    public Schedule(Long id, String userName, String title, String contents, String password) { //새로운 생성자 추가
+    public Schedule(Long id, String userName, String title, String contents, String password) {
         this.id = id;
         this.userName = userName;
         this.title = title;

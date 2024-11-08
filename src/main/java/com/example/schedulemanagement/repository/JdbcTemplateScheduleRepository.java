@@ -27,6 +27,7 @@ public class JdbcTemplateScheduleRepository implements ScheduleRepository {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
+    //일정 저장 메서드
     @Override
     public ScheduleResponseDto saveSchedule(Schedule schedule) {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
@@ -42,22 +43,26 @@ public class JdbcTemplateScheduleRepository implements ScheduleRepository {
         return new ScheduleResponseDto(key.longValue(), schedule.getUserName(), schedule.getTitle(), schedule.getContents());
     }
 
+    // 일정조회(전체) 메서드
     @Override
     public List<ScheduleResponseDto> findAllSchedules() {
         return jdbcTemplate.query("select * from schedule", scheduleRowMapper());
     }
 
+    // 일정조회(단건) 메서드
     @Override
     public Optional<Schedule> findScheduleById(Long id) {
         List<Schedule> result = jdbcTemplate.query("select * from schedule where id=?", scheduleRowMapperV2(), id);
         return result.stream().findAny();
     }
 
+    // 일정수정 메서드
     @Override
     public int updateSchedule(Long id, String userName, String title, String contents) {
         return jdbcTemplate.update("update schedule set username = ?, title = ?, contents = ? where id = ?", userName, title, contents, id);
     }
 
+    // 일정삭제 메서드
     @Override
     public int deleteSchedule(Long id) {
         return jdbcTemplate.update("delete from schedule where id = ?", id);

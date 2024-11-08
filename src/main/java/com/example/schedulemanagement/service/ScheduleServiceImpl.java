@@ -6,9 +6,11 @@ import com.example.schedulemanagement.entity.Schedule;
 import com.example.schedulemanagement.repository.ScheduleRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ScheduleServiceImpl implements ScheduleService {
@@ -23,9 +25,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     public ScheduleResponseDto saveSchedule(ScheduleRequestDto dto) {
         Schedule schedule = new Schedule(dto.getUserName(), dto.getTitle(), dto.getContents(), dto.getPassword());
 
-        Schedule savedSchedule = scheduleRepository.saveSchedule(schedule);
-
-        return new ScheduleResponseDto(savedSchedule);
+        return scheduleRepository.saveSchedule(schedule);
     }
 
     @Override
@@ -36,48 +36,40 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public ScheduleResponseDto findScheduleById(Long id) {
 
-        Schedule schedule = scheduleRepository.findScheduleById(id);
-
-        if (schedule == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Schedule not found");
-        }
+        Schedule schedule = scheduleRepository.findScheduleByIdOrElseThrow(id);
 
         return new ScheduleResponseDto(schedule);
     }
 
+    @Transactional
     @Override
-    public ScheduleResponseDto updateSchedule(Long id, ScheduleRequestDto dto) {
-        Schedule schedule = scheduleRepository.findScheduleById(id);
-
-        if (schedule == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Schedule not found");
-        }
-        if (dto.getUserName() == null || dto.getTitle() == null) {
+    public ScheduleResponseDto updateSchedule(Long id, String userName, String title, String contents) {
+        if (title == null || userName == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username and title cannot be null");
         }
-        if (!schedule.getPassword().equals(dto.getPassword())) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Passwords don't match");
+//        if (!schedule.getPassword().equals(password)) {
+//            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Passwords don't match");
+//        }
+        int updatedRow = scheduleRepository.updateSchedule(id, userName, title, contents);
+
+        if (updatedRow == 0) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Schedule not found");
         }
-
-
-        schedule.update(dto.getUserName(), dto.getTitle(), dto.getContents());
+        Schedule schedule = scheduleRepository.findScheduleByIdOrElseThrow(id);
 
         return new ScheduleResponseDto(schedule);
     }
 
     @Override
     public void deleteSchedule(Long id, ScheduleRequestDto dto) {
-        Schedule schedule = scheduleRepository.findScheduleById(id);
+        int deleteRow = scheduleRepository.deleteSchedule(id);
 
-        if (schedule == null) {
+        if (deleteRow == 0) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Schedule not found");
         }
 
-        if (!schedule.getPassword().equals(dto.getPassword())) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Passwords don't match");
-        }
-
-        scheduleRepository.deleteSchedule(id);
+//        if (!schedule.getPassword().equals(dto.getPassword())) {
+//            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Passwords don't match");
+//        }
     }
-
 }

@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Getter
 @AllArgsConstructor
 public class Schedule {
-    @Setter
+
     private Long id;
     private String userName;
     private String title;
@@ -19,6 +19,14 @@ public class Schedule {
     private LocalDateTime updatedDate;
 
     public Schedule(String userName, String title, String contents, String password) {
+        this.userName = userName;
+        this.title = title;
+        this.contents = contents;
+        this.password = password;
+    }
+
+    public Schedule(Long id, String userName, String title, String contents, String password) { //새로운 생성자 추가
+        this.id = id;
         this.userName = userName;
         this.title = title;
         this.contents = contents;
